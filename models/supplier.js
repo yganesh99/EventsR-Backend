@@ -1,3 +1,5 @@
+// models/supplier.js
+
 const mongoose = require('mongoose');
 
 const supplierSchema = new mongoose.Schema({
@@ -5,8 +7,8 @@ const supplierSchema = new mongoose.Schema({
   contactNo: String,
   products: [
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' }, // Reference to the product in the order
-      quantity: Number,
+      product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true, }, // Reference to the product in the order
+      quantity: {type: Number, required: true,},
     },
   ],
   dateCreated: { type: Date, default: Date.now },

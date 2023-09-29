@@ -1,4 +1,4 @@
-// controllers/userController.js
+// controllers/productCategoryController.js
 
 const ProductCategory = require('../models/productCategory');
 

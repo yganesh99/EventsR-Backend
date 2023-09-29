@@ -1,3 +1,5 @@
+// models/productCategory.js
+
 const mongoose = require('mongoose');
 
 const productCategorySchema = new mongoose.Schema({

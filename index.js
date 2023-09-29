@@ -31,14 +31,14 @@ const userAddressRoutes = require('./routes/userAddressRoutes');
 const productCategoryRoutes = require('./routes/productCategoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-// const supplierRoutes = require('./routes/supplierRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
 
 app.use('/api', userRoutes);
 app.use('/api', userAddressRoutes);
 app.use('/api', productCategoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', orderRoutes);
-// app.use('/api', supplierRoutes);
+app.use('/api', supplierRoutes);
 
 // Start the server
 app.listen(port, () => {
