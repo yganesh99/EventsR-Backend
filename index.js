@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const dbConnectionString = process.env.DB_CONNECTION_STRING;
 
 // Middleware
@@ -27,7 +27,16 @@ mongoose.connect(dbConnectionString, {
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
+const userAddressRoutes = require('./routes/userAddressRoutes');
+// const productRoutes = require('./routes/productRoutes');
+// const orderRoutes = require('./routes/orderRoutes');
+// const supplierRoutes = require('./routes/supplierRoutes');
+
 app.use('/api', userRoutes);
+app.use('/api', userAddressRoutes);
+// app.use('/api', productRoutes);
+// app.use('/api', orderRoutes);
+// app.use('/api', supplierRoutes);
 
 // Start the server
 app.listen(port, () => {
