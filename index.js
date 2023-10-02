@@ -5,8 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { authenticateToken } = require('./utils/functions');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -34,11 +33,11 @@ const orderRoutes = require('./routes/orderRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 
 app.use('/api', userRoutes);
-app.use('/api', userAddressRoutes);
-app.use('/api', productCategoryRoutes);
-app.use('/api', productRoutes);
-app.use('/api', orderRoutes);
-app.use('/api', supplierRoutes);
+app.use('/api', authenticateToken, userAddressRoutes);
+app.use('/api', authenticateToken, productCategoryRoutes);
+app.use('/api', authenticateToken,  productRoutes);
+app.use('/api', authenticateToken,  orderRoutes);
+app.use('/api', authenticateToken, supplierRoutes);
 
 // Start the server
 app.listen(port, () => {
