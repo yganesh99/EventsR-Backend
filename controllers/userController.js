@@ -10,9 +10,9 @@ const addUser = async (req, res) => {
 		const exisitngUser = await User.find({ email: req.body.email });
 
 		if (exisitngUser.length > 0) {
-			return res
-				.status(400)
-				.send(`User with email ${req.body.email} already exists.`);
+			return res.status(400).json({
+				error: `User with email ${req.body.email} already exists.`,
+			});
 		}
 
 		const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -36,30 +36,33 @@ const login = async (req, res) => {
 	if (!req.body.email) {
 		return res
 			.status(400)
-			.send('Invalid request. The request requires a email.');
+			.json({ error: 'Invalid request. The request requires a email.' });
 	}
 
 	if (!req.body.password) {
-		return res
-			.status(400)
-			.send('Invalid request. The request requires a password.');
+		return res.status(400).json({
+			error: 'Invalid request. The request requires a password.',
+		});
 	}
 
 	const user = await User.findOne({ email: req.body.email });
 
 	if (user == null) {
-		return res.status(400).send('User not found');
+		return res.status(400).json({ error: 'User not found' });
 	}
 
 	try {
 		if (await bcrypt.compare(req.body.password, user.password)) {
 			const accessToken = jwt.sign({ user }, JWT_SECRET);
-			res.json({ accessToken });
+			res.json({
+				accessToken,
+				name: user.firstName + ' ' + user.lastName,
+			});
 		} else {
-			res.status(401).send('Incorrect password');
+			res.status(401).json({ error: 'Incorrect password' });
 		}
 	} catch (err) {
-		res.status(500).send(`Internal Server Error: ${err}`);
+		res.status(500).json({ error: `Internal Server Error: ${err}` });
 	}
 };
 
