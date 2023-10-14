@@ -57,6 +57,7 @@ const login = async (req, res) => {
 			res.json({
 				accessToken,
 				name: user.firstName + ' ' + user.lastName,
+				email: user.email,
 			});
 		} else {
 			res.status(401).json({ error: 'Incorrect password' });
@@ -75,7 +76,7 @@ const getAllUsers = async (req, res) => {
 	}
 };
 
-const getUser = async (req, res) => {
+const getUserById = async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId);
 		if (!user) {
@@ -87,14 +88,37 @@ const getUser = async (req, res) => {
 	}
 };
 
-const updateUser = async (req, res) => {
+const getUserByEmail = async (req, res) => {
 	try {
-		const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
-			new: true,
-		});
+		const user = await User.findOne({ email: req.params.email });
 		if (!user) {
 			return res.status(404).json({ error: 'User not found' });
 		}
+		res.json(user);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
+
+const updateUser = async (req, res) => {
+	try {
+		const { userId } = req.params;
+		const { password, ...updateData } = req.body;
+
+		// If the request body contains a password, hash it
+		if (password) {
+			const hashedPassword = await bcrypt.hash(password, 10);
+			updateData.password = hashedPassword;
+		}
+
+		const user = await User.findByIdAndUpdate(userId, updateData, {
+			new: true,
+		});
+
+		if (!user) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
 		res.json(user);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
@@ -117,7 +141,8 @@ module.exports = {
 	addUser,
 	login,
 	getAllUsers,
-	getUser,
+	getUserById,
+	getUserByEmail,
 	updateUser,
 	deleteUser,
 };
